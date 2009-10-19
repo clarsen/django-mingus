@@ -1,7 +1,7 @@
 BeautifulSoup==3.1.0.1
 http://dist.repoze.org/PIL-1.1.6.tar.gz
 python-dateutil==1.4.1
-Django==1.1
+Django==1.1.1
 django-debug-toolbar==0.8.0
 django-tagging==0.3
 Pygments==1.0
@@ -29,3 +29,6 @@ http://www.aeracode.org/releases/south/south-0.6.1.tar.gz
 -e git://github.com/montylounge/django-sugar.git@26bb6a8ab966707c53c817c9b16dbb0dee54d8e4#egg=django_sugar
 -e hg+https://bitbucket.org/kmike/django-view-cache-utils/@tip#egg=django_view_cache_utils-tip
 -e hg+https://sorl-thumbnail.googlecode.com/hg/@tip#egg=sorl_thumbnail-tip
+
+http://typogrify.googlecode.com/files/typogrify-1.0.tar.gz
+smartypants

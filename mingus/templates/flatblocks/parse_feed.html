@@ -1,0 +1,8 @@
+{% load feeds text_tags %}
+{% parse_feed flatblock.content as items %}
+<h4>{{ flatblock.header }}</h4>
+<ul class="recent-posts">
+{% for item in items.entries %}
+<li><a href="{{ item.link }}" title="{{ item.title }}">{{ item.title|truncchar:50 }}</a></li>
+{% endfor %}
+</ul>

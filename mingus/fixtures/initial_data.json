@@ -2,6 +2,8 @@
 
 {"pk": 1, "model":"flatblocks.flatblock", "fields": {"content": "Powered by <a href=\"http://github.com/montylounge/django-mingus/tree/master\" title=\"Mingus blog engine\">Django-Mingus</a>  a <a href=\"http://djangoproject.com\" title=\"Django - web framework for perfectionists with deadlines.\">Django</a> project. You're enjoying the Basic theme.", "header": "", "slug": "footer"}},
 
+{"pk": 2, "model": "flatblocks.flatblock", "fields": {"content": "http://feeds.delicious.com/v2/rss/tag/django?count=15", "header": "Django Popular", "slug": "delicious.popular"}},
+
 {"pk": 1, "model": "blog.category", "fields": {"slug": "django", "title": "Django"}},
 
 {"pk": 1, "model": "blog.post", "fields": {"body": "Welcome to django-mingus powered blog engine.", "status": 2, "allow_comments": true, "author": null, "markup": "markdown", "tease": "Hello world.", "modified": "2009-08-23 23:51:31", "publish": "2009-08-23 23:49:32", "created": "2009-08-23 23:51:31", "body_markup": "<p>Welcome to django-mingus powered blog engine.\n</p>", "categories": [1], "title": "Welcome to Mingus", "slug": "welcome-mingus", "tags": "django, django-mingus, blog"}},
@@ -12,7 +14,7 @@
 
 {"pk": 1, "model": "bookmarks.bookmark", "fields": {"extended": "", "description": "A must subscribe resource for all things Django.", "created": "2009-09-03 21:58:28", "url": "http://www.djangoproject.com/community/", "title": "Django Community", "modified": "2009-09-03 21:58:28", "slug": "django-community", "tags": "django, community"}},
 
-{"pk": 1, "model": "blog.settings", "fields": {"meta_description": "A blog engine powered by Mingus, a Django project.", "rss_url": "http://127.0.0.1:8000/feeds/latest/", "about": "This is a little bit about myself for the right hand rail.", "meta_keywords": "Blog, blog engine, Django, django-mingus.", "site_name": "example.com", "copyright": "Acme LLC.", "twitter_url": "http://twitter.com/YOURUSERNAME", "ping_google": true, "site": 1, "author_name": "Jane Shmoe", "page_size": 20, "disqus_shortname": "", "email_subscribe_url": ""}},
+{"pk": 1, "model": "blog.settings", "fields": {"meta_description": "A blog engine powered by Mingus, a Django project.", "rss_url": "http://127.0.0.1:8000/feeds/posts/", "about": "This is a little bit about myself for the right hand rail.", "meta_keywords": "Blog, blog engine, Django, django-mingus.", "site_name": "example.com", "copyright": "Acme LLC.", "twitter_url": "http://twitter.com/YOURUSERNAME", "ping_google": true, "site": 1, "author_name": "Jane Shmoe", "page_size": 20, "disqus_shortname": "", "email_subscribe_url": ""}},
 
 {"pk": 1, "model": "blog.blogroll", "fields": {"url": "http://blog.montylounge.com/", "sort_order": 0, "name": "Montylounge"}},
 

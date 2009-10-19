@@ -43,7 +43,7 @@ urlpatterns += patterns('',
     url(r'^quotes/(?P<slug>[-\w]+)/$', 'mingus.core.views.quote_detail', name='quote_detail'),
     url(r'robots.txt$', rules_list, name='robots_rule_list'),
     (r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}, name='feeds'),
     (r'^api/springsteen/posts/$', springsteen_results),
     (r'^api/springsteen/firehose/$', springsteen_firehose),
     (r'^api/springsteen/category/(?P<slug>[-\w]+)/$', springsteen_category),
@@ -65,14 +65,19 @@ urlpatterns += patterns('',
         view=home_list,
         name='home_index'),
 
-    url(r'^tags/(?P<slug>[-\w]+)/$', 'mingus.core.views.tag_detail',
-            name='blog_tag_detail'),
+    url(r'^(?P<year>\d{4})/(?P<month>\d{2})/$',
+        'basic.blog.views.post_archive_month', {'month_format': '%m'},
+        name='blog_archive_month'),
+
+    url(r'^tags/(?P<tag_id>\d+)/(?P<slug>[-\w]+)/$', 'mingus.core.views.tag_detail',
+        name='blog_tag_detail'),
 
     url (r'^search/$',
         view=proxy_search,
         name='proxy_search'),
 
     (r'', include('basic.blog.urls')),
+    (r'', include('django.conf.urls.i18n')),
 )
 
 

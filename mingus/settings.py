@@ -26,8 +26,11 @@ TEMPLATE_DIRS = (
 )
 
 MIDDLEWARE_CLASSES = (
+'django.middleware.gzip.GZipMiddleware',
 'django.middleware.common.CommonMiddleware',
+'django.middleware.http.ConditionalGetMiddleware',
 'django.contrib.sessions.middleware.SessionMiddleware',
+'django.middleware.locale.LocaleMiddleware',
 'django.contrib.auth.middleware.AuthenticationMiddleware',
 'django.middleware.doc.XViewMiddleware',
 'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
@@ -42,6 +45,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 "django.core.context_processors.debug",
 "django.core.context_processors.i18n",
 "django.core.context_processors.media",
+"django.core.context_processors.request",
 "basic.blog.context_processors.blog_settings",
 "mingus.core.context_processors.site_info",
 "navbar.context_processors.navbars",
@@ -83,8 +87,11 @@ INSTALLED_APPS = (
   'honeypot',
   'sugar',
   'quoteme',
+  'typogrify',
   'mingus',
 )
+
+USE_ETAGS = True
 
 try:
    from local_settings import *

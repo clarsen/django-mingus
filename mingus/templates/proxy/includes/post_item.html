@@ -1,13 +1,21 @@
-{% load blog tagging_tags inlines oembed_tags pygment_tags %}
+{% load blog tagging_tags inlines oembed_tags pygment_tags typogrify smart_if i18n %}
 
 <div class="post clearfix">
-  <div class="date">{{ object.pub_date|date:"M d" }}</div>
-  <h2><a href="{{ object.content_object.get_absolute_url }}">{{ object.title }}</a></h2>
-  <p class="teaser">{{ object.content_object.tease|safe }}</p>
-    <div class="body">
+  <div class="date">{{ object.pub_date|date:"M d Y" }}</div>
+  <h2><a href="{{ object.content_object.get_absolute_url }}">{{ object.title|typogrify }}</a></h2>
+  <p class="teaser">{{ object.content_object.tease|typogrify|safe }}</p>
+	<div class="body">
   {% oembed %}
-    {{ object.description|render_inlines|pygmentize|safe }}
+	{% if object.description|wordcount > 75 %}
+		{{ object.description|render_inlines|pygmentize|typogrify|truncatewords_html:75|safe }}
+	{% else %}
+		{{ object.description|render_inlines|pygmentize|typogrify|safe }}
+	{% endif %}
   {% endoembed %}
-    </div>
+	</div>
+	{% if object.description|wordcount > 75 %}
+	<a href="{{ object.content_object.get_absolute_url }}">{% trans "Read more..." %}</a>
+	{% endif %}
+	<a href="{{ object.content_object.get_absolute_url }}#disqus_thread" class="comment-link clearfix">View Comments</a>
 </div>
 <!-- post -->

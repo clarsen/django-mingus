@@ -1,28 +1,26 @@
 {% extends "base.html" %}
-{% load cache i18n tagging_tags tagging_related %}
+{% load cache i18n tagging_tags typogrify tagging_related markup_tags %}
 
 {% block title %}{{ object.title }} | {{ block.super }}{% endblock %}
 
 {% block content %}
 
-<p>{% trans "Quick fact, my favorite food is" %} {{ favorite_food }}.</p>
-
-<h2>{{ object.title }}</h2>
+<h2>{{ object.title|typogrify }}</h2>
 
 {% cache 180 "quote.quote_detail" object.pk %}
 <div>
-    <div>
-        {% if object.quote %}
-            <blockquote><p>{{ object.quote }}</p></blockquote>
-        {% endif %}
-    </div>
-    <div>
-        {% if object.author %}
-      {% if object.url_source %}
-            <span>- <a href="{{ object.url_source }}">{{ object.author }}</a></span>
-      {% else %}
-      <span>- {{ object.author }} {% if object.circa %}, {{ object.circa }}{% endif %}</span>
-      {% endif %}
+	<div>
+		{% if object.quote %}
+			<div>{{ object.quote|apply_markup:"markdown"|typogrify|safe }}</div>
+		{% endif %}
+	</div>
+	<div>
+		{% if object.author %}
+	  {% if object.url_source %}
+			<span>&mdash; <a href="{{ object.url_source }}">{{ object.author }}</a></span>
+	  {% else %}
+	  <span>&mdash; {{ object.author }} {% if object.circa %}, {{ object.circa }}{% endif %}</span>
+	  {% endif %}
 
        {% endif %}
     </div>
@@ -33,7 +31,7 @@
     <br/>
     <p class="inline_tag_list"><strong>Tags:</strong>
     {% for tag in tag_list %}
-    <a href="/tags/{{ tag }}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+	<a href="{% url blog_tag_detail tag.id, tag|slugify %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     </p>
     {% endif %}

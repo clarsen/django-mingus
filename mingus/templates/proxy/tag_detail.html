@@ -1,13 +1,13 @@
 {% extends "blog/base_blog.html" %}
 {% load cache i18n smart_if %}
 
-{% block title %}{% trans "Entries for" %} {{ tag.name }} | {{ block.super }}{% endblock %}
+{% block title %}{% blocktrans with tag.name as tag %}Entries for {{ tag }}{% endblocktrans %} | {{ block.super }}{% endblock %}
 {% block body_class %}{{ block.super }} tag_detail{% endblock %}
 {% block body_id %}tag_{{ tag.id }}{% endblock %}
 
 {% block content %}
 
-<h2 class="filter-title">{% trans "Entries tagged:" %} {{ tag.name }}</h2>
+<h2 class="filter-title">{% blocktrans with tag.name as tag %}Entries tagged: {{ tag }}{% endblocktrans %}</h2>
 
   <div class="post_list">
   {% cache 3600 "mingus.core.tag_detail.object_list" tag.name %}

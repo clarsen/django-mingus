@@ -1,5 +1,5 @@
 {% extends "blog/base_blog.html" %}
-{% load blog tagging_tags inlines cache pygment_tags oembed_tags i18n tagging_related %}
+{% load blog tagging_tags inlines cache pygment_tags oembed_tags i18n typogrify tagging_related %}
 
 {% block title %}{{ object.title }} | {{ block.super }}{% endblock %}
 
@@ -32,29 +32,27 @@
 {% block content %}
 
   <div class="post clearfix">
-    <div class="date">{{ object.publish|date:"M d" }}</div>
-    <h2>{{ object.title }}</h2>
-    <p class="teaser">{{ object.tease|safe }}</p>
-      <div class="body">
+	<div class="date">{{ object.publish|date:"M d Y" }}</div>
+	<h2>{{ object.title|typogrify }}</h2>
+	<p class="teaser">{{ object.tease|typogrify|safe }}</p>
+	  <div class="body">
   {% oembed %}
-      {{ object.body_markup|render_inlines|pygmentize|safe }}
+	  {{ object.body_markup|render_inlines|pygmentize|typogrify|safe }}
   {% endoembed %}
       </div>
   </div>
 
-{% comment %} There is a problem with tags: 
-http://github.com/montylounge/django-mingus/issues#issue/9
-  {% cache 300 "blog.post_detail.tag_list" object.pk %}
+
+  {% cache 1800 "blog.post_detail.tag_list" object.pk %}
   {% tags_for_object object as tag_list %}
   {% if tag_list %}
   <p class="inline_tag_list"><strong>Tags:</strong>
     {% for tag in tag_list %}
-    <a href="/tags/{{ tag }}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+	<a href="{% url blog_tag_detail tag.id, tag|slugify %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
   </p>
   {% endif %}
   {% endcache %}
-{% endcomment %}
 
   {% cache 1800 "blog.post_detail.related_list" object.pk %}
   {% tagged_get_related object in blog.Post as post_list with num=3 %}
@@ -71,14 +69,17 @@ http://github.com/montylounge/django-mingus/issues#issue/9
   {% endcache %}
 
   <div class="subscribe clearfix">
-    <ul>
-      <li><a href="http://twitter.com/?status=reading:%20{{ object.title|urlencode }}%20-%20http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url|urlencode }}">{% trans "Twitter this" %}</a></li>
-      <li><a href="http://www.reddit.com/submit?title={{ object.title|urlencode }}&amp;url=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}">{% trans "Reddit this" %}</a></li>
-      <li><a href="http://delicious.com/save" onclick="window.open('http://delicious.com/save?v=5&amp;noui&amp;jump=close&amp;url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title), 'delicious','toolbar=no,width=550,height=550'); return false;">{% trans "Add to Delicious" %}</a></li>
+	<ul>
+	  <li><a href="#" title="Share on FriendFeed" onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('src','http://friendfeed.com/share/bookmarklet/javascript?url=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}&title={{ object.title }}');document.body.appendChild(e); return false;"><img class="icon" alt="FriendFeed" src="{{ STATIC_URL }}imgs/ff.png"></a></li>
+	  <li><a href="http://twitter.com/?status=reading: {{ object.title }} - http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}" target="_blank" title="Twitter this"><img class="icon" alt="Twitter" src="{{ STATIC_URL }}imgs/twitter.png"></a></li>
+	  <li><a href="http://www.facebook.com/sharer.php?u=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}" target="_blank" title="Share on Facebook"><img class="icon" alt="Facebook" src="{{ STATIC_URL }}imgs/facebook.png"></a></li>
+	  <li><a href="http://reddit.com/submit?title={{ object.title }}&url=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}" target="_blank" title="Reddit this"><img class="icon" alt="Reddit" src="{{ STATIC_URL }}imgs/reddit.png"></a></li>
+	  <li><a href="http://digg.com/submit?phase=2&title={{ object.title }}&url=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}" target="_blank" title="Digg this"><img class="icon" alt="Digg" src="{{ STATIC_URL }}imgs/digg.png"></a></li>
+	  <li><a href="http://delicious.com/post?url=http://{{ BLOG_SETTINGS.site.domain }}{{ object.get_absolute_url }}" target="_blank" title="Add to delicious"><img class="icon" alt="Delicious" src="{{ STATIC_URL }}imgs/delicious.png"></a></li>
       {% if FEED_SUBSCRIBE_RSS %}
-      <li><a href="{{ FEED_SUBSCRIBE_RSS }}">{% trans "Subscribe RSS" %}</a></li>
+	  <li><a href="{{ BLOG_SETTINGS.rss_url }}" title="Subscribe RSS"><img class="icon" alt="RSS" src="{{ STATIC_URL }}imgs/feed.png"></a></li>
       {% endif %}
-    </ul>
+	</ul>
   </div>
   <!-- post -->
 

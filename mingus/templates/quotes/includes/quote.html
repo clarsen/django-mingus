@@ -1,17 +1,18 @@
+{% load typogrify markup_tags %}
 <div>
-    <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
-    <div>
-        {% if object.quote %}
-            <blockquote><p>{{ object.quote }}</p></blockquote>
-        {% endif %}
-    </div>
-    <div>
-      {% if object.author %}
-      {% if object.url_source %}
-            <span>- <a href="{{ object.url_source }}">{{ object.author }}</a></span>
-      {% else %}
-      <span>- {{ object.author }} {% if object.circa %}, {{ object.circa }}{% endif %}</span>
-      {% endif %}
+	<h3><a href="{{ object.get_absolute_url }}">{{ object.title|typogrify }}</a></h3>
+	<div>
+		{% if object.quote %}
+			<p>{{ object.quote|apply_markup:"markdown"|typogrify|safe }}</p>
+		{% endif %}
+	</div>
+	<div>
+	  {% if object.author %}
+	  {% if object.url_source %}
+			<span>&mdash; <a href="{{ object.url_source }}">{{ object.author }}</a></span>
+	  {% else %}
+	  <span>&mdash; {{ object.author }} {% if object.circa %}, {{ object.circa }}{% endif %}</span>
+	  {% endif %}
 
         {% endif %}
     </div>

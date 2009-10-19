@@ -1,11 +1,19 @@
-
+{% load typogrify i18n markup_tags smart_if %}
 <div class="quote clearfix">
-  <div class="date">{{ object.pub_date|date:"M d" }}</div>
-  <h2><a href="{{ object.content_object.get_absolute_url }}">{{ object.title }}</a></h2>
-   <blockquote>
-    <p>{{ object.description|safe }}</p>
-    {% if object.content_object.author %}
-    <p class="source">&mdash; {{ object.content_object.author }}<p>
-    {% endif %}
-   </blockquote>
+  <div class="date">{{ object.pub_date|date:"M d Y" }}</div>
+  <h2><a href="{{ object.content_object.get_absolute_url }}">{{ object.title|typogrify }}</a></h2>
+   <div>
+   {% if object.description|wordcount > 75 %}
+	 {{ object.description|apply_markup:"markdown"|typogrify|truncatewords_html:75|safe }}
+   {% else %}
+	 {{ object.description|apply_markup:"markdown"|typogrify|safe }}
+   {% endif %}
+	{% if object.content_object.author %}
+	 <p class="source">&mdash; {{ object.content_object.author }}<p>
+	{% endif %}
+   </div>
+   {% if object.description|wordcount > 75 %}
+   <a href="{{ object.content_object.get_absolute_url }}">{% trans "Read more..." %}</a>
+   {% endif %}
+   <a href="{{ object.content_object.get_absolute_url }}#disqus_thread" class="comment-link clearfix">View Comments</a>
 </div>

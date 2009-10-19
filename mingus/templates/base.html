@@ -1,4 +1,4 @@
-{% load disqus_tags flatblock_tags cache navbar generic_content blog compress analytics elsewhere feeds i18n archive %}
+{% load disqus_tags flatblock_tags cache navbar generic_content blog compress analytics elsewhere feeds i18n archive tagging_tags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -14,12 +14,14 @@
     <meta name="author" content="{{ BLOG_SETTINGS.author_name }}">
     {% endblock %}
     <meta name="copyright" content="{{ BLOG_SETTINGS.copyright }}">
-
+    <link rel="openid.server" href="http://www.myopenid.com/server">
+    <link rel="openid.delegate" href="http://baratrion.myopenid.com/">
   {% block rss %}
   <link rel="alternate" type="application/rss+xml" title="{{ BLOG_SETTINGS.site_name }} main rss feed" href="{{ BLOG_SETTINGS.rss_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ BLOG_SETTINGS.site_name }} all entries feed" href="/feeds/all/">
   <link rel="alternate" type="application/rss+xml" title="{{ BLOG_SETTINGS.site_name }} all posts feed" href="/feeds/latest/">
   {% endblock %}
+  <link rel="shortcut icon" href="{{ STATIC_URL }}imgs/favicon.ico" type="image/x-icon">
 
 
     {% compress css %}
@@ -40,7 +42,7 @@
     {% block extra_head %}{% endblock %}
   </head>
 
-<body id="{% block body_id %}mingus-blog{% endblock %}" class="{% block body_class %}blog{% endblock %}">
+<body id="{% block body_id %}{% endblock %}" class="{% block body_class %}blog{% endblock %}">
 <div id="bleeder"></div>
 
   <div id="body-container" class="clearfix">
@@ -53,16 +55,21 @@
     </div>
     <!-- /logo -->
 
-    <div id="nav">
-      {% cache 3600 "base.navbars" %}
-      {% navbars %}
-      {% endcache %}
-      <form action="/search/" method="get"><div>
-          <input type="text" name="q" {% if search_term %}value="{{ search_term }}"{% endif %}>
-          <input type="submit" class="button" value="Search">
-      </div></form>
-    </div>
-    <!-- /nav -->
+	<div id="nav">
+	  {% cache 3600 "base.navbars" %}
+	  {% navbars %}
+	  {% endcache %}
+	  <form action="/search/" method="GET"><input type="text" name="q" value="{{ search_term }}"><input type="submit" class="button" value="Search"></form>
+	  <form action="/setlang/" method="post" id="id_setlang">
+		<input name="next" type="hidden" value="{{ request.path }}" />
+		<ul class="navbar-one">
+		{% for lang in languages %}
+			<li><a href="#" title="{{ lang.1 }}" onclick="document.getElementById('id_language').value='{{ lang.0 }}'; document.getElementById('id_setlang').submit(); return false;"><img src="{{ STATIC_URL }}imgs/{{ lang.0 }}.png" alt="{{ lang.1 }}" title="{{ lang.1 }}"></a></li>
+		{% endfor %}
+		<input id="id_language" name="language" type="hidden" value="" />
+	  </form>
+	</div>
+	<!-- /nav -->
 
   </div>
   <!-- /header -->
@@ -70,6 +77,7 @@
   <div class="container_16">
     <div class="grid_9 suffix_1">
       <div class="content">
+  	    {% block content_title %}{% endblock %}
             {% block content %}{% endblock %}
       </div>
       <!-- /content -->
@@ -85,7 +93,7 @@
       <h4>Subscribe</h4>
       <ul>
         {% if BLOG_SETTINGS.twitter_url %}<li><a href="{{ BLOG_SETTINGS.twitter_url }}" title="Follow me on Twitter">Twitter</a></li>{% endif %}
-        {% if BLOG_SETTINGS.rss_url %}<li><a href="{{ BLOG_SETTINGS.rss_url }}" title"Subscribe via RSS">RSS</a></li>{% endif %}
+        {% if BLOG_SETTINGS.rss_url %}<li><a href="{{ BLOG_SETTINGS.rss_url }}" title="Subscribe via RSS">RSS</a></li>{% endif %}
         {% if BLOG_SETTINGS.email_subscribe_url %}<li><a href="{{ BLOG_SETTINGS.email_subscribe_url }}" title="Subscribe via Email">Email</a></li>{% endif %}
       </ul>
 
@@ -125,6 +133,18 @@
       {% endif %}
       {% endcache %}
 
+      {% cache 3600 "bas.popular-posts" %}
+      {% get_popular_posts 10 as popular_post_list %}
+      {% if popular_post_list %}
+      <h4>{% trans "Popular Posts" %}</h4>
+      <ul class="recent-posts">
+      {% for item in popular_post_list %}
+      <li><a href="{{ item.get_absolute_url }}" title="{{ item.title }}">{{ item.title }}</a></li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+      {% endcache %}
+
     {% cache 7200 "base.archive" %}
     {% get_post_archive as dates %}
     {% if dates %}
@@ -149,17 +169,17 @@
       {% endif %}
       {% endcache %}
 
-      {% cache 3600 "bas.popular-posts" %}
-      {% get_popular_posts 10 as popular_post_list %}
-      {% if popular_post_list %}
-      <h4>{% trans "Popular Posts" %}</h4>
-      <ul class="recent-posts">
-      {% for item in popular_post_list %}
-      <li><a href="{{ item.get_absolute_url }}" title="{{ item.title }}">{{ item.title }}</a></li>
-      {% endfor %}
-      </ul>
-      {% endif %}
-      {% endcache %}
+	  {% flatblock "friendfeed.activity" 1800 using "flatblocks/parse_feed.html" %}
+
+	  <h4>{% trans "Tag Cloud" %}</h4>
+	  {% cache 18000 "base.tag_cloud" %}
+	  <div class="tag-cloud">
+		{% tag_cloud_for_model blog.Post as post_tags with steps=6 %}
+		{% for tag in post_tags %}
+		<a class="size-{{ tag.font_size }}" href="{% url blog_tag_detail tag.id, tag|slugify %}" title="used {{ tag.count }} times">{{ tag }}</a>
+		{% endfor %}
+	  </div>
+	  {% endcache %}
 
       {% cache 3600 "delicious.popular" %}
       {% parse_feed 'http://feeds.delicious.com/v2/rss/tag/django?count=15' as items %}
@@ -188,7 +208,7 @@
     </p>
   </div>
   <!-- /footer -->
-
+  {% disqus_num_replies %}
   <!-- google analtyics -->
   {% cache 7200 "base.analytics" %}
   {% analytics %}

@@ -56,3 +56,9 @@ MARKUP_CHOICES = (
     'markdown',
   'textile',
 )
+
+MARKUP_SETTINGS = {
+    'markdown': {
+        'extensions': ['abbr', 'footnotes', 'toc'],
+    }
+}

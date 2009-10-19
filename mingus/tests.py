@@ -44,7 +44,7 @@ class MingusClientTests(unittest.TestCase):
         self.failUnlessEqual(response.status_code, 200)
 
         #test result as expected
-        self.assertEquals(response.context['object_list'][0].title, 'Django Community')
+        self.assertEquals(response.context['object_list'][0].title, 'User Based Debug your Django App')
 
     def test_About(self):
         'Test if the about page renders.'
@@ -111,7 +111,7 @@ class MingusClientTests(unittest.TestCase):
         '''Test the latest posts feed displays.'''
 
         c = Client()
-        response = c.get('/feeds/latest/')
+        response = c.get('/feeds/posts/')
         self.failUnlessEqual(response.status_code, 200)
 
     def test_SpringsteenFeed_Posts(self):

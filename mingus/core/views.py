@@ -1,12 +1,14 @@
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from basic.blog.models import Post, Category
 from django.conf import settings
 from django import http
 from django.template import loader, Context
 from django_proxy.models import Proxy
 from django.views.generic import list_detail
+from django.views.decorators.cache import cache_control
+
+from basic.blog.models import Post, Category
 from basic.blog.models import Settings
 from view_cache_utils import cache_page_with_prefix
 from contact_form.views import contact_form as django_contact_form
@@ -108,7 +110,8 @@ def springsteen_category(request, slug):
                         mimetype='application/javascript')
 
 
-@cache_page_with_prefix(60, page_key_prefix)
+@cache_control(must_revalidate=True)
+@cache_page_with_prefix(60*10, page_key_prefix)
 def home_list(request, page=0, template_name='proxy/proxy_list.html', **kwargs):
     '''
     Homepage.
@@ -171,30 +174,16 @@ def oops(request):
     foo = 1/0
 
 
-def tag_detail(request, slug, template_name='proxy/tag_detail.html', **kwargs):
-    ''' Display objects for all content types supported: Post and Quotes.'''
+def tag_detail(request, tag_id, slug, template_name = 'proxy/tag_detail.html', **kwargs):
+    tag = get_object_or_404(Tag, pk=tag_id)
 
-    tag = get_object_or_404(Tag, name__iexact=slug)
-
-    #below could be prettier
-    results = []
-    qs = Proxy.objects.published().filter(tags__icontains=tag.name).order_by('-pub_date')
-    for item in qs:
-        comma_delimited = (',' in item.tags)
-        if comma_delimited:
-            for t in item.tags.split(','):
-                if t.strip(' ') == tag.name:
-                    results.append(item)
-        else:
-            for t in item.tags.split(' '):
-                if t.strip(' ') == tag.name:
-                    results.append(item)
-
-    return render_to_response(template_name,
-                    {'tag': tag, 'object_list': results},
-                    context_instance=RequestContext(request),
-                    )
-
+    return list_detail.object_list(
+        request,
+        queryset = Proxy.objects.published().filter(tags__icontains=tag.name).order_by('-pub_date'),
+        extra_context = {'tag': tag},
+        template_name = template_name,
+        **kwargs
+    )
 @check_honeypot
 def contact_form(request, form_class=ContactForm,
                  template_name='contact_form/contact_form.html'):

@@ -4,7 +4,7 @@ html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
+small, strike, strong, sub, tt, var,
 b, u, i, center, dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
@@ -18,7 +18,12 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 body { line-height: 1; }
 ol, ul { list-style: none; }
-blockquote, q { quotes: none; }
+blockquote, q {
+    quotes: none;
+    margin: 1.2em 1.2em 1.2em 1.2em;
+    padding: .8em .8em .8em 1.6em;
+    background-color: #e6e6e6;
+}
 blockquote:before, blockquote:after,
 q:before, q:after {
   content: '';
@@ -61,6 +66,10 @@ body {
     padding-top: .6em;
 }
 
+.comment-link {
+    margin-left: 20em;
+}
+
 .post .teaser{
     border-bottom: solid 1.0em #333940;
     padding: .1em .1em .8em .1em;
@@ -89,21 +98,15 @@ body {
 }
 
 .post-img {
-    margin: 1.2em 0em 1.2em 1.2em;
+    margin: 1.2em 1.2em 1.2em 1.2em;
     padding: .8em .8em 0em 1.6em;
     background-color: #e4e4e4;
-    width: 564px;
     border-left: solid 1.0em #dedede;
 }
 
 .post-img p {
     margin-left: .2em;
     line-height: 1.4em;
-}
-
-.post-img {
-  float: left;
-  margin: 0.3em 0  0 -6.0em;
 }
 
 .video
@@ -115,19 +118,9 @@ body {
 ul.recent-posts li, .post li
 {
     list-style: disc;
+    left-margin: 1.2em;
     list-style-position: inside;
     color: #333940;
-}
-
-.post .body ol,
-.post .body ul {
-    margin-left: 0;
-}
-
-.post .body li {
-    color: inherit;
-    list-style-position: outside;
-    margin-left: 0;
 }
 
 .bookmark p{ margin-top: .8em;}
@@ -231,22 +224,17 @@ h1{ font-size: 2.0em; }
 
 h2, h3, h4, h5 { margin: 1em 0 0.2em; font-weight: bold; }
 
-h2 { margin: 0.25em 0 .2em; font-size: 1.8em; letter-spacing: -0.025em; line-height: 1.2em; font-weight: 400; }
+h2 { margin: 0.25em 0 .2em; font-size: 1.8em; letter-spacing: -0.025em; line-height: 1.2em; font-weight: 100; }
 
 h3 { font-size: 1em; margin-bottom: 0.25em; }
 
 h4 { font-size: 0.875em; }
 
-p, li { font-size: .9em; line-height: 1.4em;}
-
-blockquote {
-  border-left: 1px solid #ccc;
-  padding-left: 0.5em;
-}
+p, li { font-size: 1em; line-height: 1.4em;}
 
 /* TYPE SPECIFIC */
 .post .teaser{
-    font-size: 1.1em;
+    font-size: 1.2em;
     line-height: 1.2em;
 }
 
@@ -267,9 +255,9 @@ pre{ color: #333940; }
 
 .filter-title{ font-size: 1.4em; }
 
-.list-tease { font-size: .9em; }
+.list-tease { font-size: 1em; }
 
-.subscribe ul{ font-size: .9em;}
+.subscribe ul{ font-size: 1em;}
 
 /* LINKS */
 a:link, a:visited {
@@ -281,15 +269,15 @@ a:link, a:visited {
 
 a:hover { color: #3c94bc; }
 
-h2 a:link, h2 a:visited{ font-weight: 400; color: #333940;}
+h2 a:link, h2 a:visited{ font-weight: 100; color: #333940;}
 
-h2 a:hover { font-weight: 400; color: #3c94bc;}
+h2 a:hover { font-weight: 100; color: #3c94bc;}
 
 #nav ul li a
 {
-  text-decoration: none;
-  font-weight: 400;
-  font-size: 1.0em;
+    text-decoration: none;
+    font-weight: 100;
+    font-size: 1.0em;
 
 }
 
@@ -310,3 +298,25 @@ h2 a:hover { font-weight: 400; color: #3c94bc;}
   display: none;
   margin-left: -1000;
 }
+
+.tag-cloud a { text-decoration: none; }
+.tag-cloud a.size-1 { font-size: 10px; }
+.tag-cloud a.size-2 { font-size: 10px; }
+.tag-cloud a.size-3 { font-size: 18px; }
+.tag-cloud a.size-4 { font-size: 22px; }
+.tag-cloud a.size-5 { font-size: 26px; }
+.tag-cloud a.size-6 { font-size: 30px; }
+
+/* Typogrify Styles */
+
+.amp {
+    color: #444;
+    font: italic 1.05em "Warnock Pro", "Palatino", "Book Antiqua", serif;
+    font-weight: inherit;
+}
+a .amp { color: inherit; }
+a:hover .amp { color: inherit; }
+.caps { font-size: 0.92em; font-weight: inherit;}
+.quo { margin-left: -0.30em; }
+.dquo { margin-left: -0.38em; }
+
